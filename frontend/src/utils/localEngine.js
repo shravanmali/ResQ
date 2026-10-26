@@ -625,3 +625,4 @@ class LocalC2Store {
 }
 
 export const localStore = new LocalC2Store();
+
