@@ -39,3 +39,4 @@ if __name__ == "__main__":
         pass
 
     uvicorn.run("main:app", app_dir=backend_dir, host=host, port=port, log_level="info")
+

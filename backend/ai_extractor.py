@@ -204,3 +204,4 @@ def classify_damage_vision(image_label: str) -> Dict[str, Any]:
         }
     }
     return presets.get(image_label, presets["flood_water"])
+

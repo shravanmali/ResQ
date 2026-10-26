@@ -12,6 +12,7 @@ import {
   FileCheck
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
+import { api } from '../utils/apiClient';
 
 export default function DispatchApprovalGate({ 
   selectedAllocation, 
@@ -39,18 +40,13 @@ export default function DispatchApprovalGate({
     soundFx.playAuthorize();
 
     try {
-      const res = await fetch('/api/dispatch/approve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          incident_id: activeAllocation.incident_id,
-          resource_id: activeAllocation.resource_id,
-          officer_id: officerId,
-          decision_notes: decisionNotes,
-          algorithm_used: "HUNGARIAN_OPTIMAL"
-        })
+      const data = await api.post('/api/dispatch/approve', {
+        incident_id: activeAllocation.incident_id,
+        resource_id: activeAllocation.resource_id,
+        officer_id: officerId,
+        decision_notes: decisionNotes,
+        algorithm_used: "HUNGARIAN_OPTIMAL"
       });
-      const data = await res.json();
       if (onDispatchConfirmed) onDispatchConfirmed(data);
     } catch (err) {
       console.error(err);
@@ -65,18 +61,13 @@ export default function DispatchApprovalGate({
     soundFx.playAlert();
 
     try {
-      const res = await fetch('/api/dispatch/override', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          incident_id: activeAllocation.incident_id,
-          selected_resource_id: overrideResourceId,
-          original_recommended_id: activeAllocation.resource_id,
-          officer_id: officerId,
-          override_reason: overrideReason
-        })
+      const data = await api.post('/api/dispatch/override', {
+        incident_id: activeAllocation.incident_id,
+        selected_resource_id: overrideResourceId,
+        original_recommended_id: activeAllocation.resource_id,
+        officer_id: officerId,
+        override_reason: overrideReason
       });
-      const data = await res.json();
       if (onDispatchConfirmed) onDispatchConfirmed(data);
       setShowOverride(false);
     } catch (err) {
@@ -240,3 +231,4 @@ export default function DispatchApprovalGate({
     </div>
   );
 }
+

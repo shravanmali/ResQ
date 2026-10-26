@@ -8,3 +8,4 @@ echo ======================================================================
 echo Starting RESQ Operational Command Center...
 python run.py
 pause
+

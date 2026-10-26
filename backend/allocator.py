@@ -254,3 +254,4 @@ def run_allocation(
         "assigned_count": len(assignments),
         "total_pending_incidents": N
     }
+

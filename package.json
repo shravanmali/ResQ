@@ -1,0 +1,10 @@
+{
+  "name": "resq-disaster-c2",
+  "version": "2.4.0",
+  "private": true,
+  "description": "RESQ: AI-Assisted Decision Support & Explainable Resource Optimization",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "python run.py"
+  }
+}

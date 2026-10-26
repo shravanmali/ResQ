@@ -147,3 +147,4 @@ def run_whatif_simulation(
             "critical_shortage_change": len(sim_result.get("shortage_alerts", [])) - len(baseline_result.get("shortage_alerts", []))
         }
     }
+

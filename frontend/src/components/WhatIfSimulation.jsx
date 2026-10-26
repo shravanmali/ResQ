@@ -13,6 +13,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
+import { api } from '../utils/apiClient';
 
 const SCENARIOS = [
   {
@@ -49,9 +50,8 @@ export default function WhatIfSimulation() {
   const fetchSimulation = async (scenario) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/whatif?scenario_type=${scenario}&algorithm=HUNGARIAN`);
-      const data = await res.json();
-      setSimData(data);
+      const data = await api.get(`/api/whatif?scenario_type=${scenario}&algorithm=HUNGARIAN`);
+      if (data) setSimData(data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -204,3 +204,4 @@ export default function WhatIfSimulation() {
     </div>
   );
 }
+

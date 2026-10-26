@@ -12,6 +12,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
+import { api } from '../utils/apiClient';
 
 export default function AllocationXAI({ onOpenDispatchGate }) {
   const [algorithm, setAlgorithm] = useState('HUNGARIAN'); // HUNGARIAN or GREEDY
@@ -21,9 +22,8 @@ export default function AllocationXAI({ onOpenDispatchGate }) {
   const fetchAllocations = async (algo) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/allocation?algorithm=${algo}`);
-      const json = await res.json();
-      setData(json);
+      const json = await api.get(`/api/allocation?algorithm=${algo}`);
+      if (json) setData(json);
     } catch (err) {
       console.error(err);
     } finally {
@@ -250,3 +250,4 @@ export default function AllocationXAI({ onOpenDispatchGate }) {
     </div>
   );
 }
+

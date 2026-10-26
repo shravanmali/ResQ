@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollText, ShieldCheck, Filter, Clock, User, Hash } from 'lucide-react';
 import { soundFx } from '../utils/audio';
+import { api } from '../utils/apiClient';
 
 export default function AuditLedger() {
   const [logs, setLogs] = useState([]);
@@ -9,9 +10,8 @@ export default function AuditLedger() {
 
   const fetchLogs = async () => {
     try {
-      const res = await fetch('/api/audit-logs');
-      const data = await res.json();
-      setLogs(data);
+      const data = await api.get('/api/audit-logs');
+      if (data) setLogs(data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -134,3 +134,4 @@ export default function AuditLedger() {
     </div>
   );
 }
+

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, Activity, Shield, Truck, AlertCircle, CheckCircle } from 'lucide-react';
+import { api } from '../utils/apiClient';
 
 export default function AnalyticsPanel() {
   const [stats, setStats] = useState(null);
@@ -8,9 +9,8 @@ export default function AnalyticsPanel() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch('/api/stats');
-        const data = await res.json();
-        setStats(data);
+        const data = await api.get('/api/stats');
+        if (data) setStats(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -151,3 +151,4 @@ export default function AnalyticsPanel() {
     </div>
   );
 }
+

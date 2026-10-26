@@ -125,3 +125,4 @@ def calculate_priority_score(
             f"and {hazard_type} profile ({h_score} pts)."
         )
     }
+

@@ -14,6 +14,7 @@ import {
   Sliders
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
+import { api } from '../utils/apiClient';
 
 const PRESETS = [
   {
@@ -49,15 +50,10 @@ export default function IncidentIntake({ onIncidentCreated, onSwitchTab }) {
     soundFx.playPing();
 
     try {
-      const res = await fetch('/api/incidents/ai-extract', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          report_text: reportText,
-          vision_preset: visionPreset
-        })
+      const data = await api.post('/api/incidents/ai-extract', {
+        report_text: reportText,
+        vision_preset: visionPreset
       });
-      const data = await res.json();
       setAnalysisResult(data);
       soundFx.playAlert();
     } catch (err) {
@@ -74,27 +70,22 @@ export default function IncidentIntake({ onIncidentCreated, onSwitchTab }) {
 
     const { extracted, priority } = analysisResult;
     try {
-      const res = await fetch('/api/incidents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: extracted.brief_summary || `${extracted.hazard_type} Emergency`,
-          raw_text: reportText,
-          hazard_type: extracted.hazard_type,
-          location_name: extracted.location_name,
-          latitude: extracted.latitude,
-          longitude: extracted.longitude,
-          trapped_count: extracted.trapped_count,
-          injured_count: extracted.injured_count,
-          urgency: extracted.urgency,
-          severity: extracted.severity,
-          required_capabilities: extracted.required_capabilities,
-          secondary_risks: extracted.secondary_risks,
-          priority_score: priority.score,
-          priority_tier: priority.tier
-        })
+      const created = await api.post('/api/incidents', {
+        title: extracted.brief_summary || `${extracted.hazard_type} Emergency`,
+        raw_text: reportText,
+        hazard_type: extracted.hazard_type,
+        location_name: extracted.location_name,
+        latitude: extracted.latitude,
+        longitude: extracted.longitude,
+        trapped_count: extracted.trapped_count,
+        injured_count: extracted.injured_count,
+        urgency: extracted.urgency,
+        severity: extracted.severity,
+        required_capabilities: extracted.required_capabilities,
+        secondary_risks: extracted.secondary_risks,
+        priority_score: priority.score,
+        priority_tier: priority.tier
       });
-      const created = await res.json();
       setSuccessMessage(`MISSION LOGGED: ${created.id} committed to live dispatch grid!`);
       if (onIncidentCreated) onIncidentCreated(created);
     } catch (err) {
@@ -361,3 +352,4 @@ export default function IncidentIntake({ onIncidentCreated, onSwitchTab }) {
     </div>
   );
 }
+

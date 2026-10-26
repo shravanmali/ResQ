@@ -126,3 +126,4 @@ export default function HeaderHUD({ systemStatus, onResetDemo }) {
     </header>
   );
 }
+

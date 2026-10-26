@@ -355,3 +355,4 @@ class ResQDatabase:
 
 # Singleton instance
 db = ResQDatabase()
+

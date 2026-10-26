@@ -9,6 +9,7 @@ import WhatIfSimulation from './components/WhatIfSimulation';
 import AuditLedger from './components/AuditLedger';
 import AnalyticsPanel from './components/AnalyticsPanel';
 import { soundFx } from './utils/audio';
+import { api } from './utils/apiClient';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('RADAR');
@@ -26,25 +27,20 @@ export default function App() {
   // Fetch full live state
   const refreshState = async () => {
     try {
-      const [statusRes, incRes, resRes, allocRes] = await Promise.all([
-        fetch('/api/status'),
-        fetch('/api/incidents'),
-        fetch('/api/resources'),
-        fetch('/api/allocation?algorithm=HUNGARIAN')
-      ]);
-
       const [statusData, incData, resData, allocData] = await Promise.all([
-        statusRes.json(),
-        incRes.json(),
-        resRes.json(),
-        allocRes.json()
+        api.get('/api/status'),
+        api.get('/api/incidents'),
+        api.get('/api/resources'),
+        api.get('/api/allocation?algorithm=HUNGARIAN')
       ]);
 
-      setSystemStatus(statusData);
-      setIncidents(incData);
-      setResources(resData);
-      setAllocations(allocData.assignments || []);
-      setShortages(allocData.shortage_alerts || []);
+      if (statusData) setSystemStatus(statusData);
+      if (incData) setIncidents(incData);
+      if (resData) setResources(resData);
+      if (allocData) {
+        setAllocations(allocData.assignments || []);
+        setShortages(allocData.shortage_alerts || []);
+      }
     } catch (err) {
       console.error("State refresh error:", err);
     }
@@ -84,7 +80,7 @@ export default function App() {
   const handleResetDemo = async () => {
     soundFx.playPing();
     try {
-      await fetch('/api/reset-demo', { method: 'POST' });
+      await api.post('/api/reset-demo', {});
       triggerToast("DEMO DATABASE RESTORED TO BASELINE SCENARIO", 'info');
       refreshState();
       setActiveTab('RADAR');
